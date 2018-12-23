@@ -25,11 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hqs.Model", "Entity\Hqs.Mod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hqs.Dto", "Entity\Hqs.Dto\Hqs.Dto.csproj", "{50FE9543-8F4E-4112-A24B-3D70297777D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hqs.Repository.SqlServer", "Repository\Hqs.Repository.SqlServer\Hqs.Repository.SqlServer.csproj", "{C6BC21CC-878B-4864-82DC-D59DA4ACC35D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hqs.Repository.SqlServer", "Repository\Hqs.Repository.SqlServer\Hqs.Repository.SqlServer.csproj", "{C6BC21CC-878B-4864-82DC-D59DA4ACC35D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hqs.Service", "Service\Hqs.Service\Hqs.Service.csproj", "{70D61035-3148-44DF-846A-85A88DE4A8C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hqs.Service", "Service\Hqs.Service\Hqs.Service.csproj", "{70D61035-3148-44DF-846A-85A88DE4A8C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hqs.Repository.MySql", "Repository\Hqs.Repository.MySql\Hqs.Repository.MySql.csproj", "{E18A1CF4-C47E-46B4-8FB9-CF34AA8C0035}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hqs.Repository.MySql", "Repository\Hqs.Repository.MySql\Hqs.Repository.MySql.csproj", "{E18A1CF4-C47E-46B4-8FB9-CF34AA8C0035}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿//using IdentityServer4.Dapper.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Hqs.AuthServer
 {
@@ -25,6 +20,10 @@ namespace Hqs.AuthServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddDapperStore(options => options.DbConnectionStrings = Configuration["ConnectionStrings:SqlServer"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +34,7 @@ namespace Hqs.AuthServer
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseIdentityServer();
             app.UseMvc();
         }
     }

@@ -1,10 +1,12 @@
 ﻿using System;
+using IdentityServer4.Dapper.HostedServices;
 using IdentityServer4.Dapper.Interfaces;
 using IdentityServer4.Dapper.Options;
 using IdentityServer4.Dapper.Stores.MySql;
 using IdentityServer4.Dapper.Stores.SqlServer;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace IdentityServer4.Dapper.Extensions
 {
@@ -29,6 +31,8 @@ namespace IdentityServer4.Dapper.Extensions
             builder.Services.AddTransient<IResourceStore, SqlServerResourceStore>();
             builder.Services.AddTransient<IPersistedGrantStore, SqlServerPersistedGrantStore>();
             builder.Services.AddTransient<IPersistedGrants, SqlServerPersistedGrants>();
+            builder.Services.AddSingleton<TokenCleanup>();
+            builder.Services.AddSingleton<IHostedService, TokenCleanupHost>();
             return builder;
         }
 
