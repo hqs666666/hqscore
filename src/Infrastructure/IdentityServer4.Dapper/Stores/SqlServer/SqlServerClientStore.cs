@@ -31,7 +31,7 @@ namespace IdentityServer4.Dapper.Stores.SqlServer
 
         #region Sql
 
-        private const string ClientSql = @"select * from Clients where ClientId = @client and Enable = 1;";
+        private const string ClientSql = @"select * from Clients where ClientId = @client and Enabled = 1;";
 
         private const string OtherClientInfoSql = @"select t2.* from Clients t1 inner join ClientGrantTypes t2 on t1.Id=t2.ClientId where t1.ClientId=@client and Enabled=1;
                                 select t2.* from Clients t1 inner join ClientRedirectUris t2 on t1.Id=t2.ClientId where t1.ClientId=@client and Enabled=1;

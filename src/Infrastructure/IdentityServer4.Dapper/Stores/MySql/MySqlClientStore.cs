@@ -15,7 +15,7 @@ namespace IdentityServer4.Dapper.Stores.MySql
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns></returns>
-        public async Task<Client> FindClientByIdAsync(string clientId)
+        public Task<Client> FindClientByIdAsync(string clientId)
         {
             throw new NotImplementedException();
         }
