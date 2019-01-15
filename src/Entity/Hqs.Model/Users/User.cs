@@ -21,7 +21,7 @@ namespace Hqs.Model.Users
         {
             CTime = DateTime.Now;
             MTime = CTime;
-            Status = 0;
+            Status = 1;
         }
     }
 }

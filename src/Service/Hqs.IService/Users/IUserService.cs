@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Hqs.Model.Users;
 
-namespace Hqs.IRepository.Users
+namespace Hqs.IService.Users
 {
-    public interface IUserRepository
+    public interface IUserService
     {
         User GetUser(string id);
         User GetUser(string name, string password);

@@ -10,7 +10,7 @@ namespace Hqs.Model.Mapping.Users
         {
             builder.ToTable("User");
             builder.Property(p => p.Id).HasColumnName("Id").IsRequired().HasColumnType("varchar").HasMaxLength(32);
-            builder.Property(p => p.CTime).HasComputedColumnSql("Ctime").IsRequired().HasColumnType("datetime2");
+            builder.Property(p => p.CTime).HasComputedColumnSql("CTime").IsRequired().HasColumnType("datetime2");
             builder.Property(p => p.MTime).HasComputedColumnSql("MTime").IsRequired().HasColumnType("datetime2");
             builder.Property(p => p.CreateBy).HasComputedColumnSql("CreateBy").IsRequired().HasColumnType("varchar").HasMaxLength(32);
             builder.Property(p => p.ModifyBy).HasComputedColumnSql("ModifyBy").IsRequired().HasColumnType("varchar").HasMaxLength(32);
