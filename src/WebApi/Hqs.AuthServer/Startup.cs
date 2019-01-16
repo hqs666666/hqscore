@@ -4,10 +4,8 @@ using System.Linq;
 using System.Reflection;
 using Hqs.AuthServer.AuthValidator;
 using Hqs.IRepository;
-using Hqs.IRepository.Users;
 using Hqs.Model.Users;
 using Hqs.Repository.SqlServer;
-using Hqs.Repository.SqlServer.Users;
 using IdentityServer4.Dapper.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,9 +29,9 @@ namespace Hqs.AuthServer
         public void ConfigureServices(IServiceCollection services)
         {
             var assembly = Assembly.GetAssembly(typeof(User));
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<SqlServerContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServer"]));
+
+            #region 依赖注入
 
             //注册数据库上下文
             services.AddScoped<IDataContext, SqlServerContext>();
@@ -44,7 +42,7 @@ namespace Hqs.AuthServer
             {
                 foreach (var typeArray in item.Value)
                 {
-                    if(typeArray.Name == typeof(IBaseRepository<>).Name)
+                    if (typeArray.Name == typeof(IBaseRepository<>).Name)
                         continue;
                     services.AddScoped(typeArray, item.Key);
                 }
@@ -59,12 +57,40 @@ namespace Hqs.AuthServer
                 }
             }
 
-            //配置ids4
+            #endregion
+
+            #region 配置ids4
+
             services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
-                    .AddDapperStore(options => options.DbConnectionString = Configuration["ConnectionStrings:SqlServer"])
+                    .AddDapperStore(options =>
+                    {
+                        options.DbConnectionString = Configuration["ConnectionStrings:SqlServer"];
+                    })
                     .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
                     .AddProfileService<ProfileService>();
+
+            #endregion
+
+            #region 跨域
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsConfigure", builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:5001")
+                        .WithMethods("POST", "DELETE", "PUT", "GET")
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+
+            #endregion
+
+            services.AddMvc()
+                    .AddJsonOptions(options => { options.SerializerSettings.DateFormatString = "yyyy-MM-dd hh:mm:ss"; })
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,7 +100,8 @@ namespace Hqs.AuthServer
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
+            app.UseCors("CorsConfigure");
             app.UseIdentityServer();
             app.UseMvc();
         }

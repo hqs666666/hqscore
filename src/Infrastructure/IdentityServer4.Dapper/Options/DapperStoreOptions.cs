@@ -17,7 +17,7 @@ namespace IdentityServer4.Dapper.Options
         /// <summary>
         /// 是否定时清理token
         /// </summary>
-        public bool EnableTokenCleanup { get; set; }
+        public bool EnableTokenCleanup { get; set; } = false;
 
         /// <summary>
         /// 清理token周期（s），默认1小时

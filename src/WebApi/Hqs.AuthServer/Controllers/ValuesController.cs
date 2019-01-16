@@ -5,7 +5,7 @@ namespace Hqs.AuthServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : BaseController
     {
         private readonly IUserService _userService;
 
@@ -18,7 +18,7 @@ namespace Hqs.AuthServer.Controllers
         public ActionResult Get()
         {
             var name = _userService.GetUser("EEDD685AF17E49348991C130ECEED1B8");
-            return new JsonResult(name);
+            return Ok(CreateResultMsg(name));
         }
     }
 }
