@@ -46,9 +46,9 @@ namespace Hqs.WebApi
 
             #endregion
 
-            services.AddMvc()
+            services.AddMvc(options => options.EnableEndpointRouting = false)
                     .AddJsonOptions(options => { options.SerializerSettings.DateFormatString = "yyyy-MM-dd hh:mm:ss"; })
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +58,7 @@ namespace Hqs.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseAuthentication();
             app.UseCors("AllowAllOrigin");
             app.UseMvc();

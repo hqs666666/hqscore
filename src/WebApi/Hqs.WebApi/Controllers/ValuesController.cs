@@ -10,6 +10,7 @@ namespace Hqs.WebApi.Controllers
     {
         // GET api/values
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Get()
         {
             return new JsonResult(new{});
