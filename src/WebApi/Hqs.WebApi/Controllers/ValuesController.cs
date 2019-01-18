@@ -6,14 +6,20 @@ namespace Hqs.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ValuesController : ControllerBase
+    public class ValuesController : BaseController
     {
         // GET api/values
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult Get()
         {
-            return new JsonResult(new{});
+            return Ok(CreateResultMsg(NickName));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("uid")]
+        public ActionResult GetUser()
+        {
+            return Ok(CreateResultMsg(UserId));
         }
     }
 }

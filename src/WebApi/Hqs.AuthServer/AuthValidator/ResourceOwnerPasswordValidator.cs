@@ -36,9 +36,10 @@ namespace Hqs.AuthServer.AuthValidator
         {
             return new List<Claim>()
             {
-                new Claim("nickname", user.NickName ?? ""),
+                new Claim("nick_name", user.NickName ?? ""),
                 new Claim("email", user.Email ?? ""),
-                new Claim("name", user.Name ?? "")
+                new Claim("name", user.Name ?? ""),
+                new Claim("sub", user.Id ?? "")
             };
         }
     }

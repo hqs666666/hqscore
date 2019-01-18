@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Hqs.AuthServer.AuthValidator;
+using Hqs.AuthServer.Middleware;
 using Hqs.IRepository;
+using Hqs.IService.Logs;
+using Hqs.IService.Users;
 using Hqs.Model.Users;
 using Hqs.Repository.SqlServer;
+using Hqs.Service.Logs;
 using IdentityServer4.Dapper.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Hqs.AuthServer
 {
@@ -29,13 +35,17 @@ namespace Hqs.AuthServer
         public void ConfigureServices(IServiceCollection services)
         {
             var assembly = Assembly.GetAssembly(typeof(User));
-            services.AddDbContext<SqlServerContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:SqlServer"]));
-
+            var connectionString = Configuration["ConnectionStrings:SqlServer"];
+            services.AddDbContext<SqlServerContext>(options => options.UseSqlServer(connectionString));
+            
             #region 依赖注入
 
             //注册数据库上下文
             services.AddScoped<IDataContext, SqlServerContext>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
+
+            //注册HttpContext
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             //注册Repository
             foreach (var item in GetClassName("Hqs.Repository.SqlServer"))
@@ -63,10 +73,7 @@ namespace Hqs.AuthServer
 
             services.AddIdentityServer()
                     .AddDeveloperSigningCredential()
-                    .AddDapperStore(options =>
-                    {
-                        options.DbConnectionString = Configuration["ConnectionStrings:SqlServer"];
-                    })
+                    .AddDapperStore(options => { options.DbConnectionString = connectionString; })
                     .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
                     .AddProfileService<ProfileService>();
 
@@ -88,19 +95,20 @@ namespace Hqs.AuthServer
 
             #endregion
 
-            services.AddMvc()
+            services.AddMvc(options => options.EnableEndpointRouting = false)
                     .AddJsonOptions(options => { options.SerializerSettings.DateFormatString = "yyyy-MM-dd hh:mm:ss"; })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseCors("CorsConfigure");
             app.UseIdentityServer();
             app.UseMvc();

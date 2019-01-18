@@ -13,4 +13,16 @@ namespace Hqs.Helper
         [Display(Name = "女")]
         Female = 2
     }
+
+    public enum LogType
+    {
+        [Display(Name = "业务操作")]
+        Info = 0,
+        [Display(Name = "调试信息")]
+        Debug = 1,
+        [Display(Name = "警告信息")]
+        Warning = 2,
+        [Display(Name = "错误信息")]
+        Error = 3
+    }
 }

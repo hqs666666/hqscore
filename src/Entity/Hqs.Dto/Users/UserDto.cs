@@ -15,4 +15,10 @@ namespace Hqs.Dto.Users
         public string City { get; set; }
         public string HeadImgUrl { get; set; }
     }
+
+    public class UserLogin
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }

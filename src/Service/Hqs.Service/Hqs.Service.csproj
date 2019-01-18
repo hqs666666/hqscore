@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Helper\Hqs.Helper\Hqs.Helper.csproj" />
     <ProjectReference Include="..\Hqs.IService\Hqs.IService.csproj" />
   </ItemGroup>
 

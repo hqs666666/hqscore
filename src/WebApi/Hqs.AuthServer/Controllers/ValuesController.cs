@@ -1,4 +1,6 @@
-﻿using Hqs.IService.Users;
+﻿using System;
+using Hqs.IService.Logs;
+using Hqs.IService.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hqs.AuthServer.Controllers

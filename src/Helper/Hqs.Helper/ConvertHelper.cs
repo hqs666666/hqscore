@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Text;
+using System.Reflection;
 
 namespace Hqs.Helper
 {
@@ -21,6 +21,20 @@ namespace Hqs.Helper
             writer.Write(str);
             writer.Flush();
             return stream;
+        }
+
+        #endregion
+
+        #region Enum
+
+        public static string ToDisplay(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var customAttribute = field.GetCustomAttribute<DisplayAttribute>(false);
+            string name = customAttribute?.GetName();
+            if (!string.IsNullOrEmpty(name))
+                return name;
+            return field.Name;
         }
 
         #endregion
