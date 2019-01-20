@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hqs.Helper
+namespace Hqs.IService
 {
     public enum Gender
     {
@@ -23,6 +23,8 @@ namespace Hqs.Helper
         [Display(Name = "警告信息")]
         Warning = 2,
         [Display(Name = "错误信息")]
-        Error = 3
+        Error = 3,
+        [Display(Name = "失败信息")]
+        Fail = 4
     }
 }

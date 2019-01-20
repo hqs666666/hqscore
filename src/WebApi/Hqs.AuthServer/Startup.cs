@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
+using AutoMapper;
 using Hqs.AuthServer.AuthValidator;
-using Hqs.AuthServer.Middleware;
-using Hqs.IRepository;
-using Hqs.IService.Logs;
-using Hqs.IService.Users;
+using Hqs.Framework.Filters;
+using Hqs.Framework.Middlewares;
+using Hqs.Helper;
 using Hqs.Model.Users;
-using Hqs.Repository.SqlServer;
-using Hqs.Service.Logs;
+using Hqs.Service;
 using IdentityServer4.Dapper.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Hqs.AuthServer
 {
@@ -36,34 +31,22 @@ namespace Hqs.AuthServer
         {
             var assembly = Assembly.GetAssembly(typeof(User));
             var connectionString = Configuration["ConnectionStrings:SqlServer"];
-            services.AddDbContext<SqlServerContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
             
             #region 依赖注入
 
             //注册数据库上下文
-            services.AddScoped<IDataContext, SqlServerContext>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(EfRepository<>));
+            services.AddTransient<DbContext, DataContext>();
 
             //注册HttpContext
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
-            //注册Repository
-            foreach (var item in GetClassName("Hqs.Repository.SqlServer"))
-            {
-                foreach (var typeArray in item.Value)
-                {
-                    if (typeArray.Name == typeof(IBaseRepository<>).Name)
-                        continue;
-                    services.AddScoped(typeArray, item.Key);
-                }
-            }
-
             //注册Service
-            foreach (var item in GetClassName("Hqs.Service"))
+            foreach (var item in Util.GetClassName("Hqs.Service"))
             {
                 foreach (var typeArray in item.Value)
                 {
-                    services.AddScoped(typeArray, item.Key);
+                    services.AddTransient(typeArray, item.Key);
                 }
             }
 
@@ -94,42 +77,32 @@ namespace Hqs.AuthServer
             });
 
             #endregion
-
-            services.AddMvc(options => options.EnableEndpointRouting = false)
-                    .AddJsonOptions(options => { options.SerializerSettings.DateFormatString = "yyyy-MM-dd hh:mm:ss"; })
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
+            services.AddDIHelper();     //添加依赖注册扩展
+            services.AddAutoMapper();   //注册AutoMapper
+            services.AddMemoryCache();  //注册内存缓存
+            services.AddMvc(options =>
+                {
+                    options.EnableEndpointRouting = false;
+                    options.Filters.Add<ActionFilter>();        //添加过滤器
+                })
+                .AddJsonOptions(options => { options.SerializerSettings.DateFormatString = "yyyy-MM-dd hh:mm:ss"; })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseMiddleware(typeof(ExceptionMiddleware));
+            
+            app.UseDIHelper();
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseCors("CorsConfigure");
             app.UseIdentityServer();
             app.UseMvc();
-        }
-
-        private Dictionary<Type, Type[]> GetClassName(string assemblyName)
-        {
-            if (!string.IsNullOrEmpty(assemblyName))
-            {
-                Assembly assembly = Assembly.Load(assemblyName);
-                List<Type> ts = assembly.GetTypes().ToList();
-
-                var result = new Dictionary<Type, Type[]>();
-                foreach (var item in ts.Where(s => !s.IsInterface))
-                {
-                    var interfaceType = item.GetInterfaces();
-                    result.Add(item, interfaceType);
-                }
-                return result;
-            }
-            return new Dictionary<Type, Type[]>();
         }
     }
 }

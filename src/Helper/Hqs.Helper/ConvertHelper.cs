@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace Hqs.Helper
 {
@@ -35,6 +36,20 @@ namespace Hqs.Helper
             if (!string.IsNullOrEmpty(name))
                 return name;
             return field.Name;
+        }
+
+        public static T ToEnum<T>(this string value)
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
+
+        #endregion
+
+        #region String
+
+        public static byte[] ToByte(this string value)
+        {
+            return Encoding.UTF8.GetBytes(value);
         }
 
         #endregion

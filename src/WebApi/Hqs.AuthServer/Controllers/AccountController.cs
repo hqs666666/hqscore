@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Hqs.Framework.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hqs.AuthServer.Controllers
 {

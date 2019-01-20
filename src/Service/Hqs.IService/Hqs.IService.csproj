@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Repository\Hqs.IRepository\Hqs.IRepository.csproj" />
+    <ProjectReference Include="..\..\Entity\Hqs.Dto\Hqs.Dto.csproj" />
+    <ProjectReference Include="..\..\Entity\Hqs.Model\Hqs.Model.csproj" />
+    <ProjectReference Include="..\..\Helper\Hqs.Helper\Hqs.Helper.csproj" />
   </ItemGroup>
 
 </Project>

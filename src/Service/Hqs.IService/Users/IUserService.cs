@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Hqs.Dto.Users;
 using Hqs.Model.Users;
 
 namespace Hqs.IService.Users
@@ -8,6 +6,6 @@ namespace Hqs.IService.Users
     public interface IUserService
     {
         User GetUser(string id);
-        User GetUser(string name, string password);
+        UserDto GetUser(string name, string password);
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Hqs.Dto.Users;
+using Hqs.Framework.Controllers;
 using Hqs.Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

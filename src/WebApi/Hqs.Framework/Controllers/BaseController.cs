@@ -1,18 +1,18 @@
 ﻿using System.Linq;
-using System.Net;
 using Hqs.Dto.ResultMsg;
 using Hqs.Helper;
+using Hqs.IService;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hqs.WebApi.Controllers
+namespace Hqs.Framework.Controllers
 {
-    public abstract class BaseController : ControllerBase
+    public class BaseController :ControllerBase
     {
-        protected ApiResultMsg CreateResultMsg(object value,string message = null)
+        protected ApiResultMsg CreateResultMsg(object value, string message = null)
         {
             return new ApiResultMsg()
             {
-                StatusCode = (int)HttpStatusCode.OK,
+                StatusCode = (int)AppErrorCode.Success,
                 Data = value,
                 Message = message
             };

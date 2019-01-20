@@ -1,18 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using Hqs.IRepository;
 using Hqs.Model;
-using Hqs.Model.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hqs.Repository.SqlServer
+namespace Hqs.Service
 {
-    public class SqlServerContext : DbContext, IDataContext
+    public class DataContext : DbContext
     {
-        public SqlServerContext(DbContextOptions<SqlServerContext> options) : base(options)
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
 
         }
@@ -22,7 +18,7 @@ namespace Hqs.Repository.SqlServer
             base.OnModelCreating(builder);
 
             var assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies().Where(p => p.Name.EndsWith("Model"))
-                                        .ToArray();
+                .ToArray();
 
             var assemblyList = assemblyNames.Select(Assembly.Load).ToList();
             var mappingInterface = typeof(IEntityTypeConfiguration<>);
@@ -48,11 +44,6 @@ namespace Hqs.Repository.SqlServer
         public new virtual DbSet<TEntity> Set<TEntity>() where TEntity : AbstractEntity
         {
             return base.Set<TEntity>();
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await base.SaveChangesAsync();
         }
     }
 }

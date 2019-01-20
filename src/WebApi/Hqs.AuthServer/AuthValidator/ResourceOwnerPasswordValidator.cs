@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Hqs.Dto.Users;
 using Hqs.IService.Users;
-using Hqs.Model.Users;
 using IdentityModel;
 using IdentityServer4.Validation;
 
@@ -11,7 +11,7 @@ namespace Hqs.AuthServer.AuthValidator
 {
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
-        public readonly IUserService _userService;
+        private readonly IUserService _userService;
 
         public ResourceOwnerPasswordValidator(IUserService userService)
         {
@@ -32,7 +32,7 @@ namespace Hqs.AuthServer.AuthValidator
             return Task.CompletedTask;
         }
 
-        private List<Claim> UserClaims(User user)
+        private List<Claim> UserClaims(UserDto user)
         {
             return new List<Claim>()
             {

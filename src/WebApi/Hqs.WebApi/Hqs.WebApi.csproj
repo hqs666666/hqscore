@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Repository\Hqs.Repository.SqlServer\Hqs.Repository.SqlServer.csproj" />
-    <ProjectReference Include="..\..\Service\Hqs.Service\Hqs.Service.csproj" />
+    <ProjectReference Include="..\Hqs.Framework\Hqs.Framework.csproj" />
   </ItemGroup>
 
 </Project>

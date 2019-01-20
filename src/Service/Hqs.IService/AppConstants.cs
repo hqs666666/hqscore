@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hqs.Helper
+﻿namespace Hqs.IService
 {
     /// <summary>
     /// 常量定义
