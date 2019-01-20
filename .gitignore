@@ -121,7 +121,7 @@ UpgradeLog*.XML
 
 # ---> Node
 # Logs
-logs
+# logs
 *.log
 npm-debug.log*
 package-lock.json
