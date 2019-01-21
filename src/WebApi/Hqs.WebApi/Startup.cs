@@ -55,9 +55,9 @@ namespace Hqs.WebApi
             services.AddAuthentication("Bearer")
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = Configuration["AppSetting:AuthServer"];
+                        options.Authority = Configuration["AuthConfig:AuthServer"];
                         options.RequireHttpsMetadata = false;   //不需要https    
-                        options.ApiName = Configuration["AppSetting:ApiName"];    //api的name，需要和config的名称相同
+                        options.ApiName = Configuration["AuthConfig:ApiName"];    //api的name，需要和config的名称相同
                     });
 
             #endregion
@@ -81,6 +81,8 @@ namespace Hqs.WebApi
             services.AddDIHelper();
             services.AddAutoMapper();   //注册AutoMapper
             services.AddMemoryCache();  //注册内存缓存
+            services.AddOptions();      //注册Options绑定Appsetting
+            services.Configure<AppSetting>(Configuration);
             services.AddMvc(options =>
                 {
                     options.EnableEndpointRouting = false;

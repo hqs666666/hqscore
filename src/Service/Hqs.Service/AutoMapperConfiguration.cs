@@ -8,8 +8,12 @@ namespace Hqs.Service
     {
         public AutoMapperConfiguration()
         {
+            #region Users
+
             CreateMap<UserDto, UserProfile>();
             CreateMap<UserProfile, UserDto>();
+
+            #endregion
         }
     }
 }

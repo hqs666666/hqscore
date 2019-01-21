@@ -81,6 +81,8 @@ namespace Hqs.AuthServer
             services.AddDIHelper();     //添加依赖注册扩展
             services.AddAutoMapper();   //注册AutoMapper
             services.AddMemoryCache();  //注册内存缓存
+            services.AddOptions();      //注册Options绑定Appsetting
+            services.Configure<AppSetting>(Configuration);
             services.AddMvc(options =>
                 {
                     options.EnableEndpointRouting = false;

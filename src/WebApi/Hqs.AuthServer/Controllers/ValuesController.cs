@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Hqs.AuthServer.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     public class ValuesController : BaseController
     {
         private readonly IUserService _userService;

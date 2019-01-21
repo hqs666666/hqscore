@@ -2,22 +2,23 @@
 using Hqs.Dto.Users;
 using Hqs.Framework.Controllers;
 using Hqs.Helper;
+using Hqs.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Hqs.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
     public class AccountController : BaseController
     {
         #region Ctor
 
-        private readonly IConfiguration _configuration;
+        private readonly string _authAdress;
 
-        public AccountController(IConfiguration configuration)
+        public AccountController(IOptions<AppSetting> options)
         {
-            _configuration = configuration;
+            var setting = options.Value;
+            _authAdress = setting.AuthConfig.AuthServer + setting.AuthConfig.AuthAddress;
         }
 
         #endregion
@@ -34,7 +35,7 @@ namespace Hqs.WebApi.Controllers
                 { "password",user.Password},
                 { "scope","api1 offline_access"}
             };
-            var result = HttpHelper.Post(_configuration["AppSetting:AuthServer"] + _configuration["AppSetting:Address"], param);
+            var result = HttpHelper.Post(_authAdress, param);
             return Ok(result);
         }
 
@@ -49,7 +50,7 @@ namespace Hqs.WebApi.Controllers
                 { "refresh_token",token}
             };
 
-            var result = HttpHelper.Post(_configuration["AppSetting:AuthServer"] + _configuration["AppSetting:Address"], param);
+            var result = HttpHelper.Post(_authAdress, param);
             return Ok(result);
         }
     }

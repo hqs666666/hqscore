@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using Hqs.Dto.ResultMsg;
-using Hqs.Helper;
 using Hqs.IService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hqs.Framework.Controllers
 {
+    [ApiController]
     public class BaseController :ControllerBase
     {
         protected ApiResultMsg CreateResultMsg(object value, string message = null)
