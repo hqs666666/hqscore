@@ -22,8 +22,8 @@ namespace Hqs.AuthServer.Controllers
             _cacheService = cacheService.FirstOrDefault(p => p.GetType() == typeof(RedisService));
         }
         // GET api/values
-        [HttpPost]
-        public ActionResult Get([FromBody]UserDto users)
+        [HttpGet]
+        public ActionResult Get()
         {
             var user = _cacheService.Get<UserDto>("user");
             if (user == null)

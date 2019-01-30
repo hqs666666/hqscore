@@ -1,4 +1,5 @@
-﻿using Hqs.IService.Logs;
+﻿using System;
+using Hqs.IService.Logs;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Hqs.Framework.Filters
@@ -14,19 +15,25 @@ namespace Hqs.Framework.Filters
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
-            var message = $"{context.HttpContext.Request.Host + context.HttpContext.Request.Path + context.HttpContext.Request.QueryString}；" +
-                          $"请求方式：{context.HttpContext.Request.Method}";
-
-            if (context.Exception == null)
+            try
             {
-                _logService.LogInfo(message);
-            }
-            else
-            {
-                _logService.LogError(message, context.Exception);
-            }
+                var message = $"{context.HttpContext.Request.Host + context.HttpContext.Request.Path + context.HttpContext.Request.QueryString}；" +
+                              $"请求方式：{context.HttpContext.Request.Method}";
 
-            base.OnActionExecuted(context);
+                if (context.Exception == null)
+                    _logService.LogInfo(message);
+                else
+                    _logService.LogError(message, context.Exception);
+
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e.Message, e);
+            }
+            finally
+            {
+                base.OnActionExecuted(context);
+            }
         }
     }
 }
