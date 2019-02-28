@@ -69,7 +69,7 @@ namespace Hqs.WebApi
                 options.AddPolicy("AllowAllOrigin", builder =>
                 {
                     builder
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:8080")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -101,6 +101,7 @@ namespace Hqs.WebApi
             }
 
             app.UseDIHelper();
+            app.UseMiddleware(typeof(ApiValidateMiddleware));
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseAuthentication();
             app.UseCors("AllowAllOrigin");

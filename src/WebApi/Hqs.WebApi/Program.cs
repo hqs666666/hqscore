@@ -16,6 +16,7 @@ namespace Hqs.WebApi
             WebHost.CreateDefaultBuilder(args)
                    .UseStartup<Startup>()
                    .UseKestrel()
+                   .UseUrls("http://*:5001")
                    .ConfigureKestrel((context, options) =>
                    {
                        // Set properties and call methods on options

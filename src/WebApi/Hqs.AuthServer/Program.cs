@@ -16,6 +16,7 @@ namespace Hqs.AuthServer
             WebHost.CreateDefaultBuilder(args)
                    .UseStartup<Startup>()
                    .UseKestrel()
+                   .UseUrls("http://*:5000")
                    .ConfigureKestrel((context, options) =>
                    {
                        // Set properties and call methods on options
