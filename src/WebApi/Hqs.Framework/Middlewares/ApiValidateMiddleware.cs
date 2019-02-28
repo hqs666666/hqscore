@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Hqs.Dto.ResultMsg;
 using Hqs.Helper;
 using Hqs.IService;
+using Hqs.IService.Caches;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hqs.Framework.Middlewares
 {
@@ -47,18 +49,28 @@ namespace Hqs.Framework.Middlewares
                 return;
             }
 
-            var requestDate = TimeStampToDate(headers[AppConstants.X_CA_TIMESTAMP].ToString());
+            //验证随机串和时间戳
+            var stamp = headers[AppConstants.X_CA_TIMESTAMP].ToString();
+            var reqNonce = headers[AppConstants.X_CA_NONCE].ToString();
+            var requestDate = TimeStampToDate(stamp);
             if ((DateTime.Now - requestDate).Minutes >= 10)
             {
-                await ForbiddenRequestResultAsync(context, AppErrorCode.InvalidSignature);
+                await ForbiddenRequestResultAsync(context, AppErrorCode.InvalidTimestamp);
                 return;
             }
             else
             {
-                
+                var nonce = RedisService.Get<string>($"nonce-{stamp}");
+                if (!string.IsNullOrEmpty(nonce) && nonce.Equals(reqNonce))
+                {
+                    await ForbiddenRequestResultAsync(context, AppErrorCode.InvalidNonce);
+                    return;
+                }
+
+                RedisService.Set($"nonce-{stamp}", reqNonce, 10 * 60);
             }
 
-
+            //验证签名
             var fromData = new Dictionary<string, object>();
             fromData.Add(AppConstants.X_CA_KEY, headers[AppConstants.X_CA_KEY]);
             fromData.Add(AppConstants.X_CA_NONCE, headers[AppConstants.X_CA_NONCE]);
@@ -99,7 +111,9 @@ namespace Hqs.Framework.Middlewares
             await _next.Invoke(context);
         }
 
-        private ApiResultMsg CreateApiResultMsg(AppErrorCode code,string message = null)
+        #region Util
+
+        private ApiResultMsg CreateApiResultMsg(AppErrorCode code, string message = null)
         {
             return new ApiResultMsg()
             {
@@ -117,8 +131,19 @@ namespace Hqs.Framework.Middlewares
 
         private DateTime TimeStampToDate(string timeStamp)
         {
-            var stamp = string.Concat(timeStamp,"000");
+            var stamp = string.Concat(timeStamp, "000");
             return Util.StampToDateTime(stamp);
+        }
+
+        #endregion
+
+
+        protected ICacheService RedisService => CacheService();
+
+        private ICacheService CacheService()
+        {
+            var provider = DIHelper.ServiceProvider.CreateScope();
+            return provider.ServiceProvider.GetService<ICacheService>();
         }
     }
 }
