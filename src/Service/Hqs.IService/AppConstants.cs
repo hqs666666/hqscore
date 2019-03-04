@@ -7,10 +7,10 @@
     {
         #region Headers
 
-        public const string X_CA_KEY = "X-Ca-Key";
-        public const string X_CA_NONCE = "X-Ca-Nonce";
-        public const string X_CA_SIGNATURE = "X-Ca-Signature";
-        public const string X_CA_TIMESTAMP = "X-Ca-Timestamp";
+        public const string X_CA_KEY = "key";
+        public const string X_CA_NONCE = "nonce";
+        public const string X_CA_SIGNATURE = "signature";
+        public const string X_CA_TIMESTAMP = "timestamp";
 
         #endregion
     }

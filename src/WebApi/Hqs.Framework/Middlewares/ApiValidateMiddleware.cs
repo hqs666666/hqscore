@@ -24,6 +24,12 @@ namespace Hqs.Framework.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
+            if (context.Request.Method == HttpMethods.Options)
+            {
+                await _next.Invoke(context);
+                return;
+            }
+
             var headers = context.Request.Headers;
             if (string.IsNullOrEmpty(headers[AppConstants.X_CA_KEY]))
             {
@@ -72,9 +78,9 @@ namespace Hqs.Framework.Middlewares
 
             //验证签名
             var fromData = new Dictionary<string, object>();
-            fromData.Add(AppConstants.X_CA_KEY, headers[AppConstants.X_CA_KEY]);
-            fromData.Add(AppConstants.X_CA_NONCE, headers[AppConstants.X_CA_NONCE]);
-            fromData.Add(AppConstants.X_CA_TIMESTAMP, headers[AppConstants.X_CA_TIMESTAMP]);
+            //fromData.Add(AppConstants.X_CA_KEY, headers[AppConstants.X_CA_KEY]);
+            //fromData.Add(AppConstants.X_CA_NONCE, headers[AppConstants.X_CA_NONCE]);
+            //fromData.Add(AppConstants.X_CA_TIMESTAMP, headers[AppConstants.X_CA_TIMESTAMP]);
 
             var queryString = context.Request.QueryString;
             if (queryString.HasValue)
@@ -101,7 +107,7 @@ namespace Hqs.Framework.Middlewares
             }
 
             fromData = new Dictionary<string, object>(fromData.OrderBy(p => p.Key));
-            var signature = JsonHelper.Serialize(fromData).ToMd5();
+            var signature = JsonHelper.Serialize(fromData).ToMd5().ToUpper();
             if (!signature.Equals(headers[AppConstants.X_CA_SIGNATURE]))
             {
                 await ForbiddenRequestResultAsync(context, AppErrorCode.InvalidSignature);
@@ -124,15 +130,14 @@ namespace Hqs.Framework.Middlewares
 
         private async Task ForbiddenRequestResultAsync(HttpContext context, AppErrorCode code)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            context.Response.StatusCode = (int)HttpStatusCode.OK;
             context.Response.ContentType = "application/json;charset=utf-8";
             await context.Response.WriteAsync(JsonHelper.Serialize(CreateApiResultMsg(code)));
         }
 
         private DateTime TimeStampToDate(string timeStamp)
         {
-            var stamp = string.Concat(timeStamp, "000");
-            return Util.StampToDateTime(stamp);
+            return Util.StampToDateTime(timeStamp);
         }
 
         #endregion

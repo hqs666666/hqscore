@@ -99,12 +99,12 @@ namespace Hqs.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
+            app.UseCors("AllowAllOrigin");
             app.UseDIHelper();
-            app.UseMiddleware(typeof(ApiValidateMiddleware));
+            //app.UseMiddleware(typeof(ApiValidateMiddleware));
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseAuthentication();
-            app.UseCors("AllowAllOrigin");
             app.UseMvc();
         }
     }
