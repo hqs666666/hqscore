@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Hqs.Dto;
+using Hqs.Dto.Logs;
 using Hqs.Helper;
 using Hqs.IService;
 using Hqs.IService.Logs;
@@ -60,6 +63,7 @@ namespace Hqs.Service.Logs
 
         #endregion
 
+        #region Insert
 
         public void LogDebug(string message)
         {
@@ -161,6 +165,22 @@ namespace Hqs.Service.Logs
         public async Task LogFailAsync(string message, Exception ex)
         {
             await InsertAsync(LogType.Fail, $"{message}。Exception：{JsonHelper.Serialize(ex)}");
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Select
+
+        public PageDto<Log> GetList(LogSearch search)
+        {
+            var query = _logDbSet.OrderByDescending(p => p.CTime).AsQueryable();
+            return new PageDto<Log>()
+            {
+                Count = query.Count(),
+                Item = query.Skip(search.PerPage).Take(search.PageSize).ToList()
+            };
         }
 
         #endregion

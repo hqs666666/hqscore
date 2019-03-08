@@ -66,22 +66,31 @@ namespace Hqs.Framework.Middlewares
             }
             else
             {
-                var nonce = RedisService.Get<string>($"nonce-{stamp}");
+                var nonce = _cacheService.Get<string>($"nonce-{stamp}");
                 if (!string.IsNullOrEmpty(nonce) && nonce.Equals(reqNonce))
                 {
                     await ForbiddenRequestResultAsync(context, AppErrorCode.InvalidNonce);
                     return;
                 }
 
-                RedisService.Set($"nonce-{stamp}", reqNonce, 10 * 60);
+                _cacheService.Set($"nonce-{stamp}", reqNonce, 10 * 60);
             }
 
             //验证签名
-            var fromData = new Dictionary<string, object>();
-            //fromData.Add(AppConstants.X_CA_KEY, headers[AppConstants.X_CA_KEY]);
-            //fromData.Add(AppConstants.X_CA_NONCE, headers[AppConstants.X_CA_NONCE]);
-            //fromData.Add(AppConstants.X_CA_TIMESTAMP, headers[AppConstants.X_CA_TIMESTAMP]);
+            //if (!CalcSign(context).Equals(headers[AppConstants.X_CA_SIGNATURE].ToString()))
+            //{
+            //    await ForbiddenRequestResultAsync(context, AppErrorCode.SignatureRequired);
+            //    return;
+            //}
 
+            await _next.Invoke(context);
+        }
+
+        #region Util
+
+        private string CalcSign(HttpContext context)
+        {
+            var fromData = new Dictionary<string, object>();
             var queryString = context.Request.QueryString;
             if (queryString.HasValue)
             {
@@ -108,16 +117,8 @@ namespace Hqs.Framework.Middlewares
 
             fromData = new Dictionary<string, object>(fromData.OrderBy(p => p.Key));
             var signature = JsonHelper.Serialize(fromData).ToMd5().ToUpper();
-            if (!signature.Equals(headers[AppConstants.X_CA_SIGNATURE]))
-            {
-                await ForbiddenRequestResultAsync(context, AppErrorCode.InvalidSignature);
-                return;
-            }
-
-            await _next.Invoke(context);
+            return signature;
         }
-
-        #region Util
 
         private ApiResultMsg CreateApiResultMsg(AppErrorCode code, string message = null)
         {
@@ -143,7 +144,7 @@ namespace Hqs.Framework.Middlewares
         #endregion
 
 
-        protected ICacheService RedisService => CacheService();
+        private ICacheService _cacheService => CacheService();
 
         private ICacheService CacheService()
         {

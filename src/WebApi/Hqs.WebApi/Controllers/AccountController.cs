@@ -3,12 +3,14 @@ using Hqs.Dto.Users;
 using Hqs.Framework.Controllers;
 using Hqs.Helper;
 using Hqs.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Hqs.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountController : BaseController
     {
         #region Ctor
@@ -24,11 +26,12 @@ namespace Hqs.WebApi.Controllers
         #endregion
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public ActionResult Login([FromBody]UserLogin user)
         {
             var param = new Dictionary<string, object>()
             {
-                { "client_id", "roclient" },
+                { "client_id", "ro.client" },
                 { "client_secret","secret"},
                 { "grant_type","password"},
                 { "username",user.Username},
@@ -40,18 +43,25 @@ namespace Hqs.WebApi.Controllers
         }
 
         [HttpPost("refreshtoken")]
-        public ActionResult RefreshToken([FromBody] string token)
+        [AllowAnonymous]
+        public ActionResult RefreshToken([FromBody]UserLogin user)
         {
             var param = new Dictionary<string, object>()
             {
                 { "client_id", "ro.client" },
                 { "client_secret","secret"},
                 { "grant_type","refresh_token"},
-                { "refresh_token",token}
+                { "refresh_token",user.Token}
             };
 
             var result = HttpHelper.Post(_authAdress, param);
             return Ok(result);
+        }
+
+        [HttpGet("users")]
+        public ActionResult GetUsers()
+        {
+            return Ok(CreateResultMsg(UserId));
         }
     }
 }

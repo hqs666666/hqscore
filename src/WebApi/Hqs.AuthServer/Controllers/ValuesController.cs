@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Hqs.Dto.Users;
+﻿using Hqs.Dto.Users;
 using Hqs.Framework.Controllers;
 using Hqs.IService.Caches;
 using Hqs.IService.Users;
-using Hqs.Service.Caches;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hqs.AuthServer.Controllers
@@ -16,10 +13,12 @@ namespace Hqs.AuthServer.Controllers
         private readonly ICacheService _cacheService;
 
         public ValuesController(IUserService userService,
-            IEnumerable<ICacheService> cacheService)
+            ICacheService cacheService)
+            //IEnumerable<ICacheService> cacheService)
         {
             _userService = userService;
-            _cacheService = cacheService.FirstOrDefault(p => p.GetType() == typeof(RedisService));
+            _cacheService = cacheService;
+            //_cacheService = cacheService.FirstOrDefault(p => p.GetType() == typeof(RedisService));
         }
         // GET api/values
         [HttpGet]
@@ -29,7 +28,7 @@ namespace Hqs.AuthServer.Controllers
             if (user == null)
             {
                 user = _userService.GetUser("17602132272", "123456");
-                _cacheService.Set("user", user, 24 * 60 * 60);
+                _cacheService.Set("user", user, 24 * 60);
             }
             return Ok(CreateResultMsg(user));
         }

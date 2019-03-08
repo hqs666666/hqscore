@@ -1,12 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Hqs.Dto;
+using Hqs.Dto.Logs;
+using Hqs.Model.Logs;
 
 namespace Hqs.IService.Logs
 {
     public interface ILogService
     {
+        #region Insert
+        
         void LogDebug(string message);
         void LogInfo(string message);
         void LogWarning(string message);
@@ -30,5 +33,13 @@ namespace Hqs.IService.Logs
         Task LogWarningAsync(string message, Exception ex);
         Task LogErrorAsync(string message, Exception ex);
         Task LogFailAsync(string message, Exception ex);
+
+        #endregion
+
+        #region Select
+
+        PageDto<Log> GetList(LogSearch search);
+
+        #endregion
     }
 }

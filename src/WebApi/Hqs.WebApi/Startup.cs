@@ -31,7 +31,8 @@ namespace Hqs.WebApi
 
             var assembly = Assembly.GetAssembly(typeof(User));
             var connectionString = Configuration["ConnectionStrings:SqlServer"];
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+            //UseRowNumberForPaging(),解决EF使用skip、take报错问题
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString, p => p.UseRowNumberForPaging()));
 
             //注册数据库上下文
             services.AddTransient<DbContext, DataContext>();
@@ -102,7 +103,7 @@ namespace Hqs.WebApi
             
             app.UseCors("AllowAllOrigin");
             app.UseDIHelper();
-            //app.UseMiddleware(typeof(ApiValidateMiddleware));
+            app.UseMiddleware(typeof(ApiValidateMiddleware));
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseAuthentication();
             app.UseMvc();

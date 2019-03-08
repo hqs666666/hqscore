@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Hqs.Dto.ResultMsg;
+using Hqs.Helper;
 using Hqs.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace Hqs.Framework.Controllers
             {
                 StatusCode = (int)AppErrorCode.Success,
                 Data = value,
-                Message = message
+                Message = message ?? AppErrorCode.Success.ToDisplay()
             };
         }
 
