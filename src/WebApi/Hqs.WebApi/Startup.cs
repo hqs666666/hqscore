@@ -70,7 +70,7 @@ namespace Hqs.WebApi
                 options.AddPolicy("AllowAllOrigin", builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:8080")
+                        .WithOrigins("http://localhost:8080", "http://http://devhqs.vicp.io")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();

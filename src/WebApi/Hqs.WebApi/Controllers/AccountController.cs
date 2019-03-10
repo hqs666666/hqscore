@@ -31,7 +31,7 @@ namespace Hqs.WebApi.Controllers
         {
             var param = new Dictionary<string, object>()
             {
-                { "client_id", "ro.client" },
+                { "client_id", "roclient" },
                 { "client_secret","secret"},
                 { "grant_type","password"},
                 { "username",user.Username},
@@ -48,7 +48,7 @@ namespace Hqs.WebApi.Controllers
         {
             var param = new Dictionary<string, object>()
             {
-                { "client_id", "ro.client" },
+                { "client_id", "roclient" },
                 { "client_secret","secret"},
                 { "grant_type","refresh_token"},
                 { "refresh_token",user.Token}

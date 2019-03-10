@@ -18,7 +18,7 @@ namespace Hqs.Model.Mapping.Logs
             builder.Property(p => p.LogTypeName).HasColumnName("LogTypeName").IsRequired().HasColumnType("nvarchar").HasMaxLength(20);
             builder.Property(p => p.ModuleName).HasColumnName("ModuleName").IsRequired().HasColumnType("nvarchar").HasMaxLength(50);
             builder.Property(p => p.ActionName).HasColumnName("ActionName").IsRequired().HasColumnType("nvarchar").HasMaxLength(50);
-            builder.Property(p => p.IpAddress).HasColumnName("IpAddress").IsRequired().HasColumnType("varchar").HasMaxLength(20);
+            builder.Property(p => p.IpAddress).HasColumnName("IpAddress").IsRequired().HasColumnType("varchar").HasMaxLength(30);
             builder.Property(p => p.Description).HasColumnName("Description").IsRequired().HasColumnType("nvarchar").HasMaxLength(Int32.MaxValue);
             builder.Property(p => p.BeforeChange).HasColumnName("BeforeChange").IsRequired(false).HasColumnType("nvarchar").HasMaxLength(Int32.MaxValue);
             builder.Property(p => p.AfterChange).HasColumnName("AfterChange").IsRequired(false).HasColumnType("nvarchar").HasMaxLength(Int32.MaxValue);
