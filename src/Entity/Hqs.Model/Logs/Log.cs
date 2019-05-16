@@ -5,7 +5,7 @@ namespace Hqs.Model.Logs
     public class Log : BaseEntity<int>
     {
         public DateTime CTime { get; set; }
-        public string CreateBy { get; set; }
+        public string CreatedBy { get; set; }
         public int LogType { get; set; }
         public string LogTypeName { get; set; }
         public string AccessUrl { get; set; }

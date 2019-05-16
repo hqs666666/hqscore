@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -35,7 +36,7 @@ namespace IdentityServer4.Dapper.Stores.MySql
 
         private const string GetGrantsBySubjectIdSql = @"select * from PersistedGrants where SubjectId=@subjectId;";
 
-        private const string GetGrantByKeySql = @"select * from PersistedGrants where [Key]=@key;";
+        private const string GetGrantByKeySql = @"select * from PersistedGrants where `Key`=@key;";
 
         private const string DeleteGrantByClientOrSIdSql =
             @"delete from PersistedGrants where ClientId=@clientId and SubjectId=@subjectId;";
@@ -43,10 +44,10 @@ namespace IdentityServer4.Dapper.Stores.MySql
         private const string DeleteGrantByClientOrSIdOrTypeSql =
             @"delete from PersistedGrants where ClientId=@clientId and SubjectId=@subjectId and Type=@type;";
 
-        private const string DeleteGrantByKeySql = @"delete PersistedGrants where [Key]=@key;";
+        private const string DeleteGrantByKeySql = @"delete from PersistedGrants where `Key`=@key;";
 
         private const string InsertGrantSql =
-            @"insert into PersistedGrants([Key],ClientId,CreationTime,Data,Expiration,SubjectId,Type) values(@Key,@ClientId,@CreationTime,@Data,@Expiration,@SubjectId,@Type);";
+            @"insert into PersistedGrants(`Key`,ClientId,CreationTime,Data,Expiration,SubjectId,Type) values(@Key,@ClientId,@CreationTime,@Data,@Expiration,@SubjectId,@Type);";
 
         #endregion
 

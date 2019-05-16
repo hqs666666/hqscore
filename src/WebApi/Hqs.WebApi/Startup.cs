@@ -30,9 +30,13 @@ namespace Hqs.WebApi
             #region 依赖注入
 
             var assembly = Assembly.GetAssembly(typeof(User));
-            var connectionString = Configuration["ConnectionStrings:SqlServer"];
+            var connectionStringForMssql = Configuration["ConnectionStrings:SqlServer"];
+            var connectionStringForMySql = Configuration["ConnectionStrings:MySql"];
+            var connectionString = Configuration["ConnectionStrings:DataType"] == "MySql"
+                ? connectionStringForMySql
+                : connectionStringForMssql;
             //UseRowNumberForPaging(),解决EF使用skip、take报错问题
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString, p => p.UseRowNumberForPaging()));
+            services.AddDbContext<DataContext>(options => options.UseMySql(connectionString));
 
             //注册数据库上下文
             services.AddTransient<DbContext, DataContext>();
@@ -103,7 +107,7 @@ namespace Hqs.WebApi
             
             app.UseCors("AllowAllOrigin");
             app.UseDIHelper();
-            app.UseMiddleware(typeof(ApiValidateMiddleware));
+            //app.UseMiddleware(typeof(ApiValidateMiddleware));
             app.UseMiddleware(typeof(ExceptionMiddleware));
             app.UseAuthentication();
             app.UseMvc();

@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[LogApi]
 (
 [Id] [int] NOT NULL IDENTITY(1, 1),
-[Ctime] [datetime2] NOT NULL CONSTRAINT [DF__LogApi__Ctime__32E0915F] DEFAULT (sysdatetime()),
+[Ctime] [datetime2](6) NOT NULL CONSTRAINT [DF__LogApi__Ctime__32E0915F] DEFAULT (sysdatetime()),
 [Createdby] [varchar] (38) COLLATE Chinese_PRC_CI_AS NOT NULL CONSTRAINT [DF__LogApi__Created__33D4B598] DEFAULT ('-1'),
 [LogType] [int] NOT NULL,
 [LogTypeName] [nvarchar] (20) COLLATE Chinese_PRC_CI_AS NOT NULL,

@@ -34,7 +34,7 @@ namespace Hqs.Service.Logs
         private void Insert(LogType type, string message)
         {
             var log = Create<Log>();
-            log.CreateBy = "-1";
+            log.CreatedBy = "-1";
             log.ModuleName = "(null)";
             log.ActionName = "(null)";
             log.LogType = (int)type;
@@ -49,7 +49,7 @@ namespace Hqs.Service.Logs
         private async Task InsertAsync(LogType type, string message)
         {
             var log = Create<Log>();
-            log.CreateBy = "-1";
+            log.CreatedBy = "-1";
             log.ModuleName = "(null)";
             log.ActionName = "(null)";
             log.LogType = (int)type;

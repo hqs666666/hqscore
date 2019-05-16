@@ -29,10 +29,18 @@ namespace Hqs.AuthServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region DataContext
+
             var assembly = Assembly.GetAssembly(typeof(User));
-            var connectionString = Configuration["ConnectionStrings:SqlServer"];
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
-            
+            var connectionStringForMssql = Configuration["ConnectionStrings:SqlServer"];
+            var connectionStringForMySql = Configuration["ConnectionStrings:MySql"];
+            var connectionString = Configuration["ConnectionStrings:DataType"] == "MySql"
+                ? connectionStringForMySql
+                : connectionStringForMssql;
+            services.AddDbContext<DataContext>(options => options.UseMySql(connectionString));
+
+            #endregion
+
             #region 依赖注入
 
             //注册数据库上下文
@@ -55,10 +63,11 @@ namespace Hqs.AuthServer
             #region 配置ids4
 
             services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
-                    .AddDapperStore(options => { options.DbConnectionString = connectionString; })
-                    .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
-                    .AddProfileService<ProfileService>();
+                .AddDeveloperSigningCredential()
+                .AddDapperStore(options => { options.DbConnectionString = connectionString; })
+                .UseMySql()
+                .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
+                .AddProfileService<ProfileService>();
 
             #endregion
 

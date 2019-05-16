@@ -2,21 +2,40 @@
 using System.Linq;
 using System.Reflection;
 using Hqs.Model;
+using Hqs.Model.Users;
+using Hqs.Model.Logs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Hqs.Service
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        private IConfiguration _configuration;
+        public DataContext(DbContextOptions<DataContext> options, IConfiguration configuration) : base(options)
         {
-
+            _configuration = configuration;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            var dataType = _configuration["ConnectionStrings:DataType"] == "MySql";
+            if (dataType)
+                MySqlMapping(builder);
+            else
+                MsSqlMapping(builder);
+        }
 
+        private void MySqlMapping(ModelBuilder builder)
+        {
+            builder.Entity<User>().ToTable("User");
+            builder.Entity<UserProfile>().ToTable("UserProfile");
+            builder.Entity<Log>().ToTable("LogApi");
+        }
+
+        private void MsSqlMapping(ModelBuilder builder)
+        {
             var assemblyNames = Assembly.GetEntryAssembly().GetReferencedAssemblies().Where(p => p.Name.EndsWith("Model"))
                 .ToArray();
 
